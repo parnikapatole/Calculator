@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premium Scientific Calculator</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#2b3352,#041650);
+    overflow:hidden;
+    transition:0.4s;
+}
+
+/* ================= SIDEBAR ================= */
+
+.sidebar{
+
+    position:fixed;
+    top:0;
+    left:-320px;
+
+    width:320px;
+    height:100vh;
+
+    background:#0b0b0b;
+
+    border-right:1px solid rgba(255,255,255,0.08);
+
+    padding:25px;
+
+    transition:0.4s ease;
+
+    z-index:9999;
+
+    box-shadow:
+    10px 0 40px rgba(0,0,0,0.5);
+
+}
+
+.sidebar.active{
+
+    left:0;
+
+}
+
+.sidebar-header{
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    margin-bottom:35px;
+
+}
+
+.sidebar-header h2{
+
+    color:white;
+    font-size:28px;
+    font-weight:500;
+
+}
+
+#closeSidebar{
+
+    color:white;
+    font-size:24px;
+    cursor:pointer;
+
+}
+
+.setting-group{
+
+    margin-bottom:35px;
+
+}
+
+.setting-group h3{
+
+    color:#7d7d7d;
+    margin-bottom:15px;
+    font-size:15px;
+    font-weight:500;
+
+}
+
+.setting-btn{
+
+    width:100%;
+    height:50px;
+
+    border:none;
+    border-radius:12px;
+
+    background:#1c1c1c;
+
+    color:white;
+
+    margin-bottom:12px;
+
+    cursor:pointer;
+
+    transition:0.25s;
+
+    font-size:15px;
+
+}
+
+.setting-btn:hover{
+
+    background:#2563eb;
+
+    transform:translateX(5px);
+
+}
+
+/* ================= CONTAINER ================= */
+
+.container{
+    width:1120px;
+     min-height:620px;
+    height:auto;
+    background:#000;
+    border-radius:28px;
+    overflow:auto;
+    padding:30px;
+    display:flex;
+    box-shadow:0 20px 50px rgba(0,0,0,0.5);
+    transition:0.4s;
+}
+
+/* ================= LEFT PANEL ================= */
+
+.left{
+    flex:1;
+    padding:28px;
+    border-right:1px solid rgba(255,255,255,0.08);
+    display:flex;
+    flex-direction:column;
+}
+
+/* ================= TOP NAV ================= */
+
+.top-nav{
+    display:flex;
+    align-items:center;
+    gap:35px;
+    color:#8c8c8c;
+    font-size:15px;
+    margin-bottom:40px;
+}
+
+.menu{
+    font-size:22px;
+    color:white;
+    cursor:pointer;
+}
+
+.nav-item{
+    position:relative;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.nav-item:hover{
+    color:white;
+}
+
+.active{
+    color:white;
+}
+
+.active::after{
+    content:'';
+    position:absolute;
+    left:0;
+    bottom:-8px;
+    width:100%;
+    height:2px;
+    background:#2563eb;
+    border-radius:10px;
+}
+
+/* ================= DISPLAY ================= */
+
+.display-area{
+    flex:1;
+    display:flex;
+    justify-content:flex-end;
+    align-items:flex-end;
+    flex-direction:column;
+    padding-bottom:25px;
+}
+
+.expression{
+    color:#7c7c7c;
+    font-size:20px;
+    margin-bottom:10px;
+}
+
+.display{
+    width:100%;
+    border:none;
+    outline:none;
+    background:none;
+    text-align:right;
+    color:white;
+    font-size:58px;
+    font-weight:300;
+}
+
+/* ================= TOOLBAR ================= */
+
+.toolbar{
+    border-top:1px solid rgba(255,255,255,0.08);
+    padding-top:18px;
+    margin-bottom:18px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.tools{
+    display:flex;
+    gap:35px;
+}
+
+.tool{
+    color:#a0a0a0;
+    font-size:15px;
+    cursor:pointer;
+}
+
+.arrow-btn{
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    border:1px solid rgba(255,255,255,0.1);
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    color:white;
+    cursor:pointer;
+}
+
+/* ================= BUTTONS ================= */
+
+.buttons{
+    display:grid;
+    grid-template-columns:repeat(8,1fr);
+    gap:10px;
+}
+
+.btn{
+    height:52px;
+    border:none;
+    border-radius:10px;
+    background:#1b1b1b;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.btn:hover{
+    background:#2f2f2f;
+    transform:translateY(-2px);
+}
+
+.light-btn{
+    background:#4a4a4a;
+}
+
+.blue-btn{
+    background:#0d2d80;
+}
+
+.red-btn{
+    background:#4b0000;
+}
+
+.equal{
+    background:#2563eb;
+}
+
+.equal:hover{
+    background:#3b82f6;
+}
+
+/* ================= RIGHT PANEL ================= */
+
+.right{
+    width:310px;
+    padding:28px;
+    display:flex;
+    flex-direction:column;
+}
+
+/* ================= HISTORY NAV ================= */
+
+.history-nav{
+    display:flex;
+    gap:35px;
+    color:#8c8c8c;
+    font-size:15px;
+    margin-bottom:40px;
+}
+
+.history-active{
+    color:white;
+    position:relative;
+}
+
+.history-active::after{
+    content:'';
+    position:absolute;
+    left:0;
+    bottom:-8px;
+    width:100%;
+    height:2px;
+    background:#2563eb;
+}
+
+/* ================= HISTORY ================= */
+
+.history{
+    flex:1;
+    overflow:auto;
+}
+
+.history-item{
+    text-align:right;
+    margin-bottom:45px;
+}
+
+.history-exp{
+    color:#7a7a7a;
+    font-size:18px;
+    margin-bottom:8px;
+}
+
+.history-result{
+    color:white;
+    font-size:24px;
+    font-weight:300;
+}
+
+/* ================= FOOTER ================= */
+
+.footer{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:#b0b0b0;
+    font-size:15px;
+}
+
+.footer-icons{
+    display:flex;
+    gap:18px;
+}
+
+/* ================= GRAPH ================= */
+
+.graph-box{
+    grid-column:span 8;
+    padding:30px;
+    text-align:center;
+}
+
+canvas{
+    background:#111;
+    border-radius:20px;
+}
+
+/* ================= CONVERTER ================= */
+
+.converter-box{
+    grid-column:span 8;
+    padding:30px;
+    color:white;
+}
+
+.converter-box input{
+    width:100%;
+    height:55px;
+    border:none;
+    border-radius:12px;
+    background:#111;
+    color:white;
+    padding:15px;
+    margin-bottom:20px;
+}
+
+/* ================= LIGHT MODE ================= */
+
+.light-mode{
+    background:#f1f5f9 !important;
+}
+
+.light-mode .container{
+    background:white !important;
+}
+
+.light-mode .display{
+    color:black !important;
+}
+
+.light-mode .btn{
+    background:#e5e7eb !important;
+    color:black !important;
+}
+
+.light-mode .left,
+.light-mode .right{
+    background:white !important;
+}
+
+.light-mode .expression,
+.light-mode .tool,
+.light-mode .nav-item,
+.light-mode .history-exp{
+    color:#444 !important;
+}
+
+.light-mode .history-result{
+    color:black !important;
+}
+
+/* ================= MOBILE ================= */
+
+@media(max-width:1100px){
+
+    body{
+        padding:20px;
+        height:auto;
+    }
+
+    .container{
+        width:100%;
+        height:auto;
+        flex-direction:column;
+    }
+
+    .right{
+        width:100%;
+        border-top:1px solid rgba(255,255,255,0.08);
+    }
+
+    .buttons{
+      .buttons{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    padding-bottom:10px;
+    width:100%;
+} 
+    }
+
+}
+/* ================= 3D BACKGROUND ================= */
+
+body{
+    background:
+    radial-gradient(circle at top left,#1e3a8a,#020617);
+
+    overflow-y:auto;
+    padding:30px;
+
+    position:relative;
+}
+
+/* BACKGROUND CONTAINER */
+
+.bg-animation{
+
+    position:fixed;
+    top:0;
+    left:0;
+
+    width:100%;
+    height:100%;
+
+    overflow:hidden;
+
+    z-index:-1;
+
+}
+
+/* GLOW BALLS */
+
+.ball{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    filter:blur(12px);
+
+    opacity:0.45;
+
+    animation:float 12s infinite ease-in-out;
+
+}
+
+.ball1{
+
+    width:350px;
+    height:350px;
+
+    background:#2563eb;
+
+    top:5%;
+    left:5%;
+
+}
+
+.ball2{
+
+    width:250px;
+    height:250px;
+
+    background:#7c3aed;
+
+    bottom:10%;
+    right:10%;
+
+    animation-delay:2s;
+
+}
+
+.ball3{
+
+    width:180px;
+    height:180px;
+
+    background:#06b6d4;
+
+    top:50%;
+    left:45%;
+
+    animation-delay:4s;
+
+}
+
+/* GRID */
+
+.grid{
+
+    position:absolute;
+
+    width:200%;
+    height:200%;
+
+    background-image:
+    linear-gradient(
+        rgba(255,255,255,0.03) 1px,
+        transparent 1px
+    ),
+    linear-gradient(
+        90deg,
+        rgba(255,255,255,0.03) 1px,
+        transparent 1px
+    );
+
+    background-size:60px 60px;
+
+    transform:
+    perspective(1000px)
+    rotateX(75deg);
+
+    animation:gridMove 20s linear infinite;
+
+    bottom:-60%;
+
+}
+
+/* PARTICLES */
+
+.particle{
+
+    position:absolute;
+
+    width:4px;
+    height:4px;
+
+    border-radius:50%;
+
+    background:white;
+
+    opacity:0.3;
+
+    animation:particleMove linear infinite;
+
+}
+
+/* ANIMATIONS */
+
+@keyframes float{
+
+    0%{
+        transform:
+        translateY(0px)
+        translateX(0px);
+    }
+
+    50%{
+        transform:
+        translateY(-40px)
+        translateX(30px);
+    }
+
+    100%{
+        transform:
+        translateY(0px)
+        translateX(0px);
+    }
+
+}
+
+@keyframes gridMove{
+
+    0%{
+        transform:
+        perspective(1000px)
+        rotateX(75deg)
+        translateY(0);
+    }
+
+    100%{
+        transform:
+        perspective(1000px)
+        rotateX(75deg)
+        translateY(60px);
+    }
+
+}
+
+@keyframes particleMove{
+
+    from{
+        transform:translateY(100vh);
+    }
+
+    to{
+        transform:translateY(-100vh);
+    }
+
+}
+
+</style>
+</head>
+
+<body>
+    <!-- ================= 3D BACKGROUND ================= -->
+
+<div class="bg-animation">
+
+    <div class="grid"></div>
+
+    <div class="ball ball1"></div>
+    <div class="ball ball2"></div>
+    <div class="ball ball3"></div>
+
+    <div class="particle"
+    style="
+    left:10%;
+    animation-duration:12s;
+    animation-delay:1s;
+    ">
+    </div>
+
+    <div class="particle"
+    style="
+    left:20%;
+    animation-duration:18s;
+    animation-delay:2s;
+    ">
+    </div>
+
+    <div class="particle"
+    style="
+    left:35%;
+    animation-duration:15s;
+    animation-delay:3s;
+    ">
+    </div>
+
+    <div class="particle"
+    style="
+    left:50%;
+    animation-duration:20s;
+    animation-delay:5s;
+    ">
+    </div>
+
+    <div class="particle"
+    style="
+    left:70%;
+    animation-duration:17s;
+    animation-delay:2s;
+    ">
+    </div>
+
+    <div class="particle"
+    style="
+    left:85%;
+    animation-duration:13s;
+    animation-delay:4s;
+    ">
+    </div>
+
+</div>
+
+<!-- ================= SIDEBAR ================= -->
+
+<div class="sidebar" id="sidebar">
+
+    <div class="sidebar-header">
+
+        <h2>Settings</h2>
+
+        <span id="closeSidebar">✕</span>
+
+    </div>
+
+    <div class="setting-group">
+
+        <h3>Theme</h3>
+
+        <button class="setting-btn" onclick="setTheme('dark')">
+            Dark Mode
+        </button>
+
+        <button class="setting-btn" onclick="setTheme('light')">
+            Light Mode
+        </button>
+
+    </div>
+
+    <div class="setting-group">
+
+        <h3>Calculator Modes</h3>
+
+        <button class="setting-btn" onclick="changeMode('Scientific')">
+            Scientific
+        </button>
+
+        <button class="setting-btn" onclick="changeMode('Programmer')">
+            Programmer
+        </button>
+
+        <button class="setting-btn" onclick="changeMode('Graph')">
+            Graph
+        </button>
+
+        <button class="setting-btn" onclick="changeMode('Converter')">
+            Converter
+        </button>
+
+    </div>
+
+    <div class="setting-group">
+
+        <h3>Sound</h3>
+
+        <button class="setting-btn" onclick="playClick()">
+            Test Sound
+        </button>
+
+    </div>
+
+</div>
+
+<!-- ================= MAIN ================= -->
+
+<div class="container">
+
+    <!-- LEFT -->
+
+    <div class="left">
+
+        <!-- NAV -->
+
+        <div class="top-nav">
+
+            <div class="menu">☰</div>
+
+            <div class="nav-item">Standard</div>
+
+            <div class="nav-item active">Scientific</div>
+
+            <div class="nav-item">Graph</div>
+
+            <div class="nav-item">Programmer</div>
+
+            <div class="nav-item">Converter</div>
+
+            <div style="margin-left:auto;color:white;">◐</div>
+
+        </div>
+
+        <!-- DISPLAY -->
+
+        <div class="display-area">
+
+            <div class="expression" id="expression">
+                (256 + 123) × (845 ÷ 25) =
+            </div>
+
+            <input
+            type="text"
+            class="display"
+            id="display"
+            value="12810.2"
+            readonly>
+
+        </div>
+
+        <!-- TOOLBAR -->
+
+        <div class="toolbar">
+
+            <div class="tools">
+
+                <div class="tool">
+                    Trigonometry ⌄
+                </div>
+
+                <div class="tool">
+                    Probability ⌄
+                </div>
+
+                <div class="tool">
+                    Calculus ⌄
+                </div>
+
+            </div>
+
+            <div class="arrow-btn">
+                ❯
+            </div>
+
+        </div>
+
+        <!-- BUTTONS -->
+
+        <div class="buttons" id="buttons">
+
+            <button class="btn">2nd</button>
+            <button class="btn">mr</button>
+            <button class="btn">m+</button>
+            <button class="btn">mc</button>
+            <button class="btn">e</button>
+            <button class="btn blue-btn">CE</button>
+            <button class="btn blue-btn">C</button>
+            <button class="btn red-btn">⌫</button>
+
+            <button class="btn">sin</button>
+            <button class="btn">cos</button>
+            <button class="btn">tan</button>
+            <button class="btn">cot</button>
+            <button class="btn">(</button>
+            <button class="btn">)</button>
+            <button class="btn">%</button>
+            <button class="btn">÷</button>
+
+            <button class="btn">sec</button>
+            <button class="btn">csc</button>
+            <button class="btn light-btn">7</button>
+            <button class="btn light-btn">8</button>
+            <button class="btn light-btn">9</button>
+            <button class="btn">×</button>
+            <button class="btn">x²</button>
+            <button class="btn">x³</button>
+
+            <button class="btn">xʸ</button>
+            <button class="btn">eˣ</button>
+            <button class="btn light-btn">4</button>
+            <button class="btn light-btn">5</button>
+            <button class="btn light-btn">6</button>
+            <button class="btn">−</button>
+            <button class="btn">10ˣ</button>
+            <button class="btn">ln</button>
+
+            <button class="btn">2ˣ</button>
+            <button class="btn">|x|</button>
+            <button class="btn light-btn">1</button>
+            <button class="btn light-btn">2</button>
+            <button class="btn light-btn">3</button>
+            <button class="btn">+</button>
+            <button class="btn">Deg</button>
+            <button class="btn">logₓ</button>
+
+            <button class="btn">logᵧx</button>
+            <button class="btn">x!</button>
+            <button class="btn">±</button>
+            <button class="btn light-btn">0</button>
+            <button class="btn light-btn">.</button>
+            <button class="btn equal">=</button>
+
+        </div>
+
+    </div>
+
+    <!-- RIGHT -->
+
+    <div class="right">
+
+        <div class="history-nav">
+
+            <div class="history-active">
+                History
+            </div>
+
+            <div>Archive</div>
+
+            <div style="margin-left:auto;">
+                ⎘
+            </div>
+
+        </div>
+
+        <!-- HISTORY -->
+
+        <div class="history">
+
+            <div class="history-item">
+
+                <div class="history-exp">
+                    (256 + 123) × (845÷25) =
+                </div>
+
+                <div class="history-result">
+                    12,810.2
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+
+        <div class="footer">
+
+            <div>Save History</div>
+
+            <div class="footer-icons">
+
+                <div>🖨</div>
+                <div>⤴</div>
+                <div>🗑</div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+/* ================= DISPLAY ================= */
+
+const display=document.getElementById("display");
+const expression=document.getElementById("expression");
+const buttons=document.getElementById("buttons");
+
+let currentInput="";
+
+/* ================= SIDEBAR ================= */
+
+const sidebar=
+document.getElementById("sidebar");
+
+const menu=
+document.querySelector(".menu");
+
+const closeSidebar=
+document.getElementById("closeSidebar");
+
+menu.addEventListener("click",()=>{
+
+    sidebar.classList.add("active");
+
+});
+
+closeSidebar.addEventListener("click",()=>{
+
+    sidebar.classList.remove("active");
+
+});
+
+/* ================= THEMES ================= */
+
+function setTheme(mode){
+
+    if(mode==="light"){
+
+        document.body.classList.add(
+            "light-mode"
+        );
+
+    }
+
+    else{
+
+        document.body.classList.remove(
+            "light-mode"
+        );
+
+    }
+
+}
+
+/* ================= SOUND ================= */
+
+function playClick(){
+
+    let audio=
+    new Audio(
+    "https://www.soundjay.com/buttons/sounds/button-09.mp3"
+    );
+
+    audio.play();
+
+}
+
+/* ================= NAVIGATION ================= */
+
+const navItems=document.querySelectorAll(".nav-item");
+
+navItems.forEach(item=>{
+
+    item.addEventListener("click",()=>{
+
+        navItems.forEach(nav=>
+            nav.classList.remove("active")
+        );
+
+        item.classList.add("active");
+
+        changeMode(item.innerText);
+
+    });
+
+});
+
+/* ================= MODES ================= */
+
+function changeMode(mode){
+
+    const toolbar=document.querySelector(".toolbar");
+
+    if(mode==="Standard"){
+
+        toolbar.style.display="none";
+
+        buttons.innerHTML=`
+        <button class="btn blue-btn">CE</button>
+            <button class="btn blue-btn">C</button>
+            <button class="btn red-btn">⌫</button>
+
+
+            <button class="btn light-btn">7</button>
+            <button class="btn light-btn">8</button>
+            <button class="btn light-btn">9</button>
+        
+
+            <button class="btn light-btn">4</button>
+            <button class="btn light-btn">5</button>
+            <button class="btn light-btn">6</button>
+          
+
+            <button class="btn light-btn">1</button>
+            <button class="btn light-btn">2</button>
+            <button class="btn light-btn">3</button>
+           
+
+            <button class="btn light-btn">0</button>
+            <button class="btn light-btn">.</button>
+            <button class="btn equal">=</button>
+            <button class="btn">+</button>
+            <button class="btn">÷</button>
+            <button class="btn">×</button>
+            <button class="btn">−</button>
+
+        `;
+
+    }
+
+    else if(mode==="Scientific"){
+
+        location.reload();
+
+    }
+
+    else if(mode==="Graph"){
+
+        toolbar.style.display="none";
+
+        buttons.innerHTML=`
+
+            <div class="graph-box">
+
+                <h2 style="margin-bottom:20px;color:white;">
+                    Graph Mode
+                </h2>
+
+                <canvas
+                id="graphCanvas"
+                width="500"
+                height="250"></canvas>
+
+            </div>
+
+        `;
+
+        drawGraph();
+
+    }
+
+    else if(mode==="Programmer"){
+
+        toolbar.style.display="none";
+
+        buttons.innerHTML=`
+
+            <button class="btn">AND</button>
+            <button class="btn">OR</button>
+            <button class="btn">XOR</button>
+            <button class="btn">NOT</button>
+
+            <button class="btn">BIN</button>
+            <button class="btn">HEX</button>
+            <button class="btn">DEC</button>
+            <button class="btn">OCT</button>
+
+            <button class="btn light-btn">7</button>
+            <button class="btn light-btn">8</button>
+            <button class="btn light-btn">9</button>
+            <button class="btn">+</button>
+
+            <button class="btn light-btn">4</button>
+            <button class="btn light-btn">5</button>
+            <button class="btn light-btn">6</button>
+            <button class="btn">−</button>
+
+            <button class="btn light-btn">1</button>
+            <button class="btn light-btn">2</button>
+            <button class="btn light-btn">3</button>
+            <button class="btn">×</button>
+
+            <button class="btn light-btn">0</button>
+            <button class="btn equal">=</button>
+            <button class="btn">÷</button>
+
+        `;
+
+    }
+
+    else if(mode==="Converter"){
+
+        toolbar.style.display="none";
+
+        buttons.innerHTML=`
+
+            <div class="converter-box">
+
+                <h2 style="margin-bottom:20px;">
+                    Kilometer Converter
+                </h2>
+
+                <input
+                type="number"
+                id="km"
+                placeholder="Enter KM">
+
+                <button
+                class="btn equal"
+                style="
+                    width:100%;
+                    height:55px;
+                "
+                onclick="convertKm()">
+
+                    Convert
+
+                </button>
+
+                <div
+                id="convertResult"
+                style="
+                    margin-top:20px;
+                    font-size:22px;
+                ">
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+/* ================= GRAPH ================= */
+
+function drawGraph(){
+
+    const canvas=
+    document.getElementById("graphCanvas");
+
+    if(!canvas) return;
+
+    const ctx=canvas.getContext("2d");
+
+    ctx.strokeStyle="#2563eb";
+
+    ctx.lineWidth=3;
+
+    ctx.beginPath();
+
+    for(let x=0;x<500;x++){
+
+        let y=
+        125+
+        Math.sin(x*0.02)*60;
+
+        if(x===0){
+
+            ctx.moveTo(x,y);
+
+        }
+
+        else{
+
+            ctx.lineTo(x,y);
+
+        }
+
+    }
+
+    ctx.stroke();
+
+}
+
+/* ================= CONVERTER ================= */
+
+function convertKm(){
+
+    let km=
+    document.getElementById("km").value;
+
+    let miles=
+    (km*0.621371).toFixed(2);
+
+    document.getElementById(
+        "convertResult"
+    ).innerHTML=
+
+    km+" KM = "+miles+" Miles";
+
+}
+
+/* ================= BUTTONS ================= */
+
+document.addEventListener("click",(e)=>{
+
+    if(
+        e.target.classList.contains("btn")
+    ){
+
+        const value=e.target.innerText;
+
+        if(value==="="){
+
+            calculate();
+
+        }
+
+        else if(value==="C"){
+
+            currentInput="";
+
+            display.value="0";
+
+            expression.innerText="";
+
+        }
+
+        else if(value==="⌫"){
+
+            currentInput=
+            currentInput.slice(0,-1);
+
+            display.value=
+            currentInput || "0";
+
+        }
+
+        else{
+
+            currentInput += value;
+
+            display.value=currentInput;
+
+        }
+
+    }
+
+});
+
+/* ================= CALCULATE ================= */
+
+function calculate(){
+
+    try{
+
+        let exp=currentInput
+        .replace(/×/g,'*')
+        .replace(/÷/g,'/');
+
+        let result=eval(exp);
+
+        expression.innerText=
+        currentInput + " =";
+
+        display.value=result;
+
+        addHistory(currentInput,result);
+
+        currentInput=result.toString();
+
+    }
+
+    catch{
+
+        display.value="Error";
+
+    }
+
+}
+
+/* ================= HISTORY ================= */
+
+function addHistory(exp,res){
+
+    const history=
+    document.querySelector(".history");
+
+    const div=
+    document.createElement("div");
+
+    div.classList.add("history-item");
+
+    div.innerHTML=`
+
+        <div class="history-exp">
+            ${exp} =
+        </div>
+
+        <div class="history-result">
+            ${res}
+        </div>
+
+    `;
+
+    history.prepend(div);
+
+}
+
+</script>
+
+</body>
+</html>
